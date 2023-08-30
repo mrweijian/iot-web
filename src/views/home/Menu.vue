@@ -3,6 +3,10 @@
     <el-button type="primary" @click="dialogVisible = true">新增</el-button>
   </el-row>
 
+  <div style="margin-top: 30px">
+    <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"/>
+  </div>
+
 
   <el-dialog
       v-model="dialogVisible"
@@ -58,7 +62,8 @@
 
 
 <script lang="ts" setup>
-import {addMenuInfo} from "../../service/menu/MenuService"
+import {addMenuInfo, getMenuListTree} from "../../service/menu/MenuService"
+
 
 const dialogVisible = ref(false)
 
@@ -73,7 +78,6 @@ const menu = reactive({
 
 // 添加菜单信息
 function addMenu() {
-  console.log(menu)
   addMenuInfo(menu).then((result) => {
     dialogVisible.value = false
   }).catch((error) => {
@@ -81,6 +85,26 @@ function addMenu() {
   })
 }
 
+interface Tree {
+  label: string
+  children?: Tree[]
+}
+
+let data = ref([])
+
+getMenuListTree().then((result) => {
+  data.value = result.data
+  console.log("data", data)
+})
+
+const handleNodeClick = (data: Tree) => {
+  console.log(data)
+}
+
+const defaultProps = {
+  children: 'children',
+  label: 'label',
+}
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
       <div class="top">
         <div class="main">
           <div class="header">
-            <img :src="getImage('/logo.png')" class="logo">
+            <img :src="getImage('/logo_02.svg')" class="logo">
             <h2>物联协管中心</h2>
           </div>
           <div>
