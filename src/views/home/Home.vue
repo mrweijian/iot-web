@@ -5,13 +5,13 @@
         <Top></Top>
       </el-header>
 
-      <el-container>
+      <el-container class="name-container">
 
-        <el-aside width="400px" style="margin-top: 50px">
+        <el-aside class="name-aside">
           <Left></Left>
         </el-aside>
 
-        <el-main style="margin-top: 50px;margin-left:-190px;height: 80vh;">
+        <el-main class="name-main">
           <router-view/>
         </el-main>
       </el-container>
@@ -25,6 +25,25 @@ import Top from "../../components/top.vue"
 
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+.common-layout{
+  height: 100vh;
+  :deep(.el-header){
+    padding:0;
+  }
+  .name-container{
+    //margin-top:16px;
+    display: flex;
+    height:calc(100vh - 60px)
+  }
+  .name-aside{
+    height:100%;
+    overflow: auto;
+    width:200px;
+    box-shadow: 0 12px 12px 0 rgba(0,0,0,.1);
+  }
+  .el-main{
+    flex: 1;
+  }
+}
 </style>

@@ -3,10 +3,11 @@ import {getToken} from "../utils/comm";
 
 
 const routes = [
-    {path: "/", redirect:"/Login"},
+    {path: "/", redirect:"/Home"},
     {path: "/Login", component: import('../views/login/Login.vue')},
     {
         path: "/Home", component: import('../views/home/Home.vue'),
+        redirect:"/User",
         children: [
             {
                 path: "/User", component: import('../views/home/User.vue'),

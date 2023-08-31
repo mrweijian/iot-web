@@ -1,25 +1,15 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="12">
-      <el-menu
-          :default-active="activeIndex"
-          class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
-          @select="handleSelect"
-      >
-        <Menu :menuList="leftMenuStore.menus"></Menu>
-
-      </el-menu>
-    </el-col>
-  </el-row>
+  <el-menu :default-active="activeIndex" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+    @select="handleSelect">
+    <Menu :menuList="leftMenuStore.menus"></Menu>
+  </el-menu>
 </template>
 
 <script lang="ts" setup>
-import {Menu as IconMenu} from '@element-plus/icons-vue'
+import { Menu as IconMenu } from '@element-plus/icons-vue'
 import Menu from "./Menu.vue"
-import {useLeftMenuStore} from "../store/LeftMenu"
-import {useRouter} from 'vue-router'
+import { useLeftMenuStore } from "../store/LeftMenu"
+import { useRouter } from 'vue-router'
 
 const leftMenuStore = useLeftMenuStore()
 
@@ -46,7 +36,15 @@ const handleClose = (key: string, keyPath: string[]) => {
 const handleSelect = (key, keyPath) => {
   console.log("key", key)
   if (leftMenuStore.menus) {
-    router.push(leftMenuStore.menus[key-1].menuPath)
+    router.push(leftMenuStore.menus[key - 1].menuPath)
   }
 }
 </script>
+<style lang="less" scoped>
+
+  .el-menu-vertical-demo{
+    border:none;
+  }
+
+</style>
+
