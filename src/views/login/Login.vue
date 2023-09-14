@@ -60,6 +60,7 @@ import { useRouter } from "vue-router";
 import { login } from '../../service/login/LoginService'
 import { ElMessage } from 'element-plus'
 import { LocalStore } from '../../utils/comm';
+import { useLeftMenuStore } from "../../store/LeftMenu"
 import { MENU_LIST, TOKEN_KEY } from "../../utils/variable";
 import { getMenuList } from "../../service/menu/MenuService";
 import { useMenuStore } from "../../store/menu"
@@ -74,6 +75,7 @@ const form = reactive({
 });
 const route = useRouter();
 const menuStore = useMenuStore();
+const leftMenu = useLeftMenuStore();
 
 
 function onLogin() {
@@ -90,6 +92,9 @@ function onLogin() {
     // 获取菜单列表
     getMenuList().then((menuParam) => {
       menuStore.$patch({ menus: menuParam.data })
+      if(menuParam.data.length>0){
+        leftMenu.$patch({menus:menuParam.data[0].children})
+      }
     }).catch((error) => {
       console.log(error)
     })
@@ -100,6 +105,14 @@ function onLogin() {
   });
 
 
+}
+function getNotChildrenItem(data){
+  if(data[0].children.length>0){
+    getNotChildrenItem(data[0].children)
+  }else{
+    return data[0]
+  }
+  
 }
 </script>
 

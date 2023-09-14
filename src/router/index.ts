@@ -7,8 +7,11 @@ const routes = [
     {path: "/Login", component: import('../views/login/Login.vue')},
     {
         path: "/Home", component: import('../views/home/Home.vue'),
-        redirect:"/User",
+        redirect:"/House",
         children: [
+            {
+                path: "/House", component: import('../views/home/User.vue'),
+            },
             {
                 path: "/User", component: import('../views/home/User.vue'),
             },
@@ -17,6 +20,9 @@ const routes = [
             },
             {
                 path: "/Menu", component: import('../views/home/Menu.vue'),
+            },
+            {
+                path: "/Dervice", component: import('../views/home/Menu.vue'),
             }
         ]
     },
@@ -30,6 +36,7 @@ const router = createRouter({
 const noTokenPath = ['/Login']
 
 router.beforeEach((to, from, next) => {
+
     const token = getToken()
     if (noTokenPath.includes(to.path)) {
         next()

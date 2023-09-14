@@ -1,5 +1,7 @@
 import axios, {AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance} from 'axios'
 import {BASE_API_PATH} from "./variable";
+import {LocalStore} from '../utils/comm';
+import {TOKEN_KEY } from "../utils/variable";
 import {ElMessage} from 'element-plus'
 
 const service: AxiosInstance = axios.create({
@@ -10,7 +12,8 @@ const service: AxiosInstance = axios.create({
 
 // 请求
 service.interceptors.request.use((config: AxiosRequestConfig) => {
-    // 这里可以设置token: config!.headers!.Authorization = token
+    // 这里可以设置token: 
+    config!.headers!.Authorization = 'Bear '+ LocalStore.get(TOKEN_KEY)
     return config;
 });
 

@@ -3,7 +3,7 @@
     <div class="logo"> <img :src="getImage('/nav.svg')" class="logo" style="margin-top:9px;height: 40px;display: block;">
     </div>
     <div class="menu">
-      <el-menu :default-active="activeIndex" mode="horizontal" :ellipsis="false" @select="handleSelect">
+      <el-menu :default-active="menuTopIndex" mode="horizontal" :ellipsis="false" @select="handleSelect">
         <el-menu-item :index="item.id" v-for="item in menus">{{ item.title }}</el-menu-item>
       </el-menu>
     </div>
@@ -34,7 +34,7 @@ import { storeToRefs } from 'pinia'
 const enumStore = useMenuStore();
 const leftMenu = useLeftMenuStore();
 
-const { menus } = storeToRefs(enumStore)
+const { menus,menuTopIndex } = storeToRefs(enumStore)
 
 const activeIndex = getActiveIndex();
 
@@ -49,6 +49,7 @@ function getActiveIndex() {
 console.log("activeIndex", activeIndex)
 const route = useRouter();
 const handleSelect = (key, keyPath) => {
+  console.log('menuTopIndex',menuTopIndex,key)
   for (const idex in enumStore.menus) {
     const item = enumStore.menus[idex]
     if (key === item.id) {
