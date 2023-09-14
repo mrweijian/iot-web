@@ -8,6 +8,7 @@
 <script lang="ts" setup>
 import { Menu as IconMenu } from '@element-plus/icons-vue'
 import Menu from "./Menu.vue"
+import { getNodeByMenuPath } from "../utils/comm";
 import { useMenuStore } from "../store/Menu"
 import { useLeftMenuStore } from "../store/LeftMenu"
 import { storeToRefs } from 'pinia'
@@ -36,10 +37,12 @@ const handleOpen = (key: string, keyPath: string[]) => {
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
-const handleSelect = (key, keyPath) => {
-  console.log("key", key)
+const handleSelect = (key:string) => {
+  
   if (leftMenuStore.menus) {
-    router.push(leftMenuStore.menus[key - 1].menuPath)
+    const pathItem:any = getNodeByMenuPath(leftMenuStore.menus,Number(key),'id')
+    console.log(pathItem,leftMenuStore.menus)
+    router.push(pathItem.menuPath)
   }
 }
 </script>

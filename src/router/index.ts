@@ -42,14 +42,14 @@ router.beforeEach((to, from, next) => {
     const menusObj = useMenuStore(pinia)//userStore 初始化 必须放在  路由守卫里 才会生效， 必须放在  路由守卫里 才会生效， 必须放在  路由守卫里 才会生效
     const menuLeft = useLeftMenuStore(pinia)
     const activeMenu: any = getParentNode(menusObj.menus, to.path)
-    const activeLeftMenu: any = getNodeByMenuPath(menusObj.menus, to.path)
+    const activeLeftMenu: any = getNodeByMenuPath(menusObj.menus, to.path,'menuPath')
     if (activeMenu) {
         menusObj.$patch({topActive: `${activeMenu.id}`,leftActive: `${activeLeftMenu.id}`})
         menuLeft.$patch({ menus: activeMenu.children })
     }
 
 
-    
+
     const token = getToken()
     if (noTokenPath.includes(to.path)) {
         next()

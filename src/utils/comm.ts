@@ -69,13 +69,13 @@ export const LocalStore = {
   
     return parentNode; // 返回父节点
   }
-export const getNodeByMenuPath=(tree:any, menuPath:any)=> {
+export const getNodeByMenuPath=(tree:any, key:any,field:any)=> {
     let targetNode = null; // 目标节点
   
     // 递归函数
     function searchNode(node:any) {
       // 如果当前节点的 menuPath 与目标 menuPath 匹配，则将目标节点设置为当前节点
-      if (node.menuPath === menuPath) {
+      if (node[field] === key) {
         targetNode = node;
       }
   
