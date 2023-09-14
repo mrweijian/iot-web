@@ -1,5 +1,5 @@
 <template>
-  <el-menu :default-active="activeIndex" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+  <el-menu :default-active="`${leftActive}`" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
     @select="handleSelect">
     <Menu :menuList="leftMenuStore.menus"></Menu>
   </el-menu>
@@ -8,11 +8,14 @@
 <script lang="ts" setup>
 import { Menu as IconMenu } from '@element-plus/icons-vue'
 import Menu from "./Menu.vue"
+import { useMenuStore } from "../store/Menu"
 import { useLeftMenuStore } from "../store/LeftMenu"
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 const leftMenuStore = useLeftMenuStore()
-
+const enumStore = useMenuStore();
+const {leftActive} = storeToRefs(enumStore)
 const activeIndex = getActiveIndex()
 
 function getActiveIndex() {

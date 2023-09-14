@@ -4,8 +4,8 @@ export const useMenuStore = defineStore('menu', {
     state: () => {
         return {
             menus: [],
-            topActive:0,
-            leftActive:0
+            topActive:'6',
+            leftActive:''
         }
     },
     persist: true,

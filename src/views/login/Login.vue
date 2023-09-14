@@ -92,9 +92,9 @@ function onLogin() {
     // 获取菜单列表
     getMenuList().then((menuParam) => {
       menuStore.$patch({ menus: menuParam.data })
-      if(menuParam.data.length>0){
-        leftMenu.$patch({menus:menuParam.data[0].children})
-      }
+      // if(menuParam.data.length>0){
+      //   leftMenu.$patch({menus:menuParam.data[0].children})
+      // }
     }).catch((error) => {
       console.log(error)
     })
@@ -105,14 +105,6 @@ function onLogin() {
   });
 
 
-}
-function getNotChildrenItem(data){
-  if(data[0].children.length>0){
-    getNotChildrenItem(data[0].children)
-  }else{
-    return data[0]
-  }
-  
 }
 </script>
 

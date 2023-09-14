@@ -1,9 +1,9 @@
 <template>
   <template v-for="item in menuList" :key="item.id">
     <!-- 没有子集 -->
-    <templatem v-if="!item.children">
+    <template v-if="!item.children">
       <el-menu-item
-          :index="item.id"
+          :index="`${item.id}`"
           v-if="!item.hidden"
           @click="goRoute"
       >
@@ -14,7 +14,7 @@
           <span>{{ item.title }}</span>
         </template>
       </el-menu-item>
-    </templatem>
+    </template>
     <!-- 只有一个子集 -->
     <template v-if="item.children && item.children.length == 1">
       <el-menu-item
@@ -33,7 +33,7 @@
 
     <!-- 多个子集 -->
     <el-sub-menu
-        :index="item.id"
+        :index="`${item.id}`"
         v-if="item.children && item.children.length > 1"
     >
       <template #title>
@@ -58,7 +58,7 @@ const router = useRouter()
 defineProps(['menuList'])
 
 const goRoute = (e: any) => {
-  console.log(leftMenu.menus[e.index-1])
+  //console.log(leftMenu.menus[e.index-1])
 }
 </script>
 <script lang="ts" setup>

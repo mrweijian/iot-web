@@ -3,8 +3,8 @@
     <div class="logo"> <img :src="getImage('/nav.svg')" class="logo" style="margin-top:9px;height: 40px;display: block;">
     </div>
     <div class="menu">
-      <el-menu :default-active="menuTopIndex" mode="horizontal" :ellipsis="false" @select="handleSelect">
-        <el-menu-item :index="item.id" v-for="item in menus">{{ item.title }}</el-menu-item>
+      <el-menu :default-active="topActive" mode="horizontal" :ellipsis="false" @select="handleSelect">
+        <el-menu-item :index="`${item.id}`" v-for="item in menus">{{ item.title }}</el-menu-item>
       </el-menu>
     </div>
     <div class="user">
@@ -24,6 +24,8 @@
 </template>
 
 <script setup>
+import {ref} from "vue"
+import { ElMessage } from 'element-plus'
 import { getImage } from '../utils/comm';
 import { useMenuStore } from "../store/Menu"
 import { useLeftMenuStore } from "../store/LeftMenu"
@@ -33,28 +35,39 @@ import { storeToRefs } from 'pinia'
 
 const enumStore = useMenuStore();
 const leftMenu = useLeftMenuStore();
+const size = ref('')
+const { menus,topActive} = storeToRefs(enumStore)
+console.log('enumStore',enumStore.topActive,topActive)
+ const activeIndex = '4-1';
 
-const { menus,menuTopIndex } = storeToRefs(enumStore)
-
-const activeIndex = getActiveIndex();
-
-function getActiveIndex() {
-  if (enumStore.menus[0]) {
-    return ref(enumStore.menus[0].id);
-  } else {
-    return ref(1);
-  }
-}
-
-console.log("activeIndex", activeIndex)
+// function getActiveIndex() {
+//   if (enumStore.menus[0]) {
+//     return ref(enumStore.menus[0].id);
+//   } else {
+//     return ref(1);
+//   }
+// }
 const route = useRouter();
-const handleSelect = (key, keyPath) => {
-  console.log('menuTopIndex',menuTopIndex,key)
+function getChildrenRoute(data){
+  
+  if((data.children&&data.children.length===0)||!data.children){
+    return data.menuPath;
+  }else{
+    getChildrenRoute(data.children[0])
+  }
+};
+const handleSelect = (key,) => {
+  //enumStore.$patch({topActive:key})
   for (const idex in enumStore.menus) {
     const item = enumStore.menus[idex]
-    if (key === item.id) {
+    if (key == item.id) {
       leftMenu.$patch({ menus: enumStore.menus[idex].children })
-      return;
+      if(!enumStore.menus[idex].children){
+        ElMessage.error('菜单结构异常!')
+      }
+      const path = getChildrenRoute(enumStore.menus[idex].children[0])
+      route.push(path)
+      break;
     }
   }
 
@@ -65,6 +78,7 @@ const handleSelect = (key, keyPath) => {
     route.push("/Login")
   }
 }
+
 </script>
 
 <style scoped lang="less">
