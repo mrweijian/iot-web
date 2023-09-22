@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="left">
-      <img :src="getImage('/bg1.svg')" />
+      <img :src="getImage('/bg1.svg')"/>
     </div>
     <div class="right">
 
@@ -19,7 +19,7 @@
                 <span>账号:</span>
               </el-col>
               <el-col :span="20">
-                <el-input v-model="form.username" class="w-50 m-2" placeholder="请输入用户名" size="large" />
+                <el-input v-model="form.username" class="w-50 m-2" placeholder="请输入用户名" size="large"/>
               </el-col>
             </el-row>
             <el-row style="margin-top: 20px">
@@ -27,7 +27,7 @@
                 <span>密码：</span>
               </el-col>
               <el-col :span="20">
-                <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password size="large" />
+                <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password size="large"/>
               </el-col>
             </el-row>
 
@@ -35,18 +35,18 @@
               <el-col :span="4">
                 <span>验证码：</span>
               </el-col>
-              <el-col :span="10">
-                <el-input v-model="form.verifyCode" placeholder="验证码"  size="large" />
+              <el-col :span="10" >
+                <el-input v-model="form.verifyCode" placeholder="验证码" size="large"/>
               </el-col>
 
               <el-col :span="8">
-                <img :src="getImage('/验证码.png')" style="width: 100px">
+                <img :src="imageBase64" style="width: 100px" @click="getVerifyCode">
               </el-col>
             </el-row>
           </div>
         </div>
         <div class="button">
-          <el-button type="primary"  size="large" @click="onLogin"> 登录</el-button>
+          <el-button type="primary" size="large" @click="onLogin"> 登录</el-button>
         </div>
 
       </div>
@@ -55,15 +55,15 @@
 </template>
 
 <script setup lang="ts">
-import { getImage } from '../../utils/comm';
-import { useRouter } from "vue-router";
-import { login } from '../../service/login/LoginService'
-import { ElMessage } from 'element-plus'
-import { LocalStore } from '../../utils/comm';
-import { useLeftMenuStore } from "../../store/LeftMenu"
-import { MENU_LIST, TOKEN_KEY } from "../../utils/variable";
-import { getMenuList } from "../../service/menu/MenuService";
-import { useMenuStore } from "../../store/menu"
+import {getImage} from '../../utils/comm';
+import {useRouter} from "vue-router";
+import {login, getCaptcha} from '../../service/login/LoginService'
+import {ElMessage} from 'element-plus'
+import {LocalStore} from '../../utils/comm';
+import {useLeftMenuStore} from "../../store/LeftMenu"
+import {MENU_LIST, TOKEN_KEY} from "../../utils/variable";
+import {getMenuList} from "../../service/menu/MenuService";
+import {useMenuStore} from "../../store/menu"
 
 const form = reactive({
   username: '',
@@ -76,22 +76,25 @@ const form = reactive({
 const route = useRouter();
 const menuStore = useMenuStore();
 const leftMenu = useLeftMenuStore();
+const imageBase64 = ref('')
+const uuid = ref('')
 
 
 function onLogin() {
 
   const userData = {
     userName: form.username,
-    password: form.password
+    password: form.password,
+    verifyCode: form.verifyCode,
+    uuid: uuid.value
   }
-
 
   login(userData).then((param) => {
     console.log("登录成功！")
     LocalStore.set(TOKEN_KEY, param.data)
     // 获取菜单列表
     getMenuList().then((menuParam) => {
-      menuStore.$patch({ menus: menuParam.data })
+      menuStore.$patch({menus: menuParam.data})
       // if(menuParam.data.length>0){
       //   leftMenu.$patch({menus:menuParam.data[0].children})
       // }
@@ -100,12 +103,23 @@ function onLogin() {
     })
     route.push("/Home")
   }).catch((err) => {
-    ElMessage.error('登录失败!')
-    //todo:刷新验证码
+    ElMessage.error(err.message)
+    getVerifyCode()
   });
 
-
 }
+
+function getVerifyCode() {
+  getCaptcha().then(param => {
+    imageBase64.value = param.data.imageBase64;
+    uuid.value = param.data.uuid;
+  })
+}
+
+onMounted(() => {
+  getVerifyCode()
+})
+
 </script>
 
 <style scoped lang="less">
@@ -143,6 +157,7 @@ function onLogin() {
     right: 60px;
     border-radius: 16px;
     padding: 30px 16px;
+
     .top {
       min-height: 300px;
       border-radius: 16px;
@@ -150,25 +165,28 @@ function onLogin() {
       .main {
         //min-height: 570px;
         border-radius: 16px;
-        
-        .header-con{
-          width:100%;
+
+        .header-con {
+          width: 100%;
           display: flex;
           justify-content: center;
         }
+
         .header {
           border-radius: 16px;
           display: flex;
           //flex-direction: column;
           margin-bottom: 30px;
-          .name{
-            margin:0;
-            padding-left:20px;
-            line-height:50px;
+
+          .name {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 50px;
           }
+
           .logo {
             height: 50px;
-            
+
           }
         }
       }
@@ -177,9 +195,10 @@ function onLogin() {
         display: flex;
         flex-direction: column;
         margin-top: 30px;
-        padding:0 100px;
-        :deep(.el-button){
-          border:none;
+        padding: 0 100px;
+
+        :deep(.el-button) {
+          border: none;
           background: linear-gradient(110deg, #027FF3 0%, #00E4FE 100%);
         }
       }
